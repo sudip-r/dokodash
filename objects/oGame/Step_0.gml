@@ -1,8 +1,16 @@
-if (game_state != "playing") {
-    if (keyboard_check_pressed(ord("R")) || device_mouse_check_button_pressed(0, mb_left)) {
+if (game_state == "gameover" || game_state == "complete") {
+    if (keyboard_check_pressed(ord("R"))) {
         room_restart();
     }
 
+    if (device_mouse_check_button_pressed(0, mb_left)) {
+        room_restart();
+    }
+
+    exit;
+}
+
+if (game_state != "playing") {
     exit;
 }
 
@@ -13,18 +21,20 @@ distance += game_speed;
 spawn_timer--;
 
 if (spawn_timer <= 0) {
-    var lane_index = irandom(2);
+    var obstacle_count = choose(1, 1, 2);
+    var available_lanes = [0, 1, 2];
 
-    if (lane_index == last_obstacle_lane) {
-        lane_index = (lane_index + 1 + irandom(1)) mod 3;
+    repeat (obstacle_count) {
+        var pick_index = irandom(array_length(available_lanes) - 1);
+        var lane_index = available_lanes[pick_index];
+
+        var spawn_x = lanes[lane_index];
+        var obstacle_type = choose(oStone, oGoat);
+
+        instance_create_layer(spawn_x, -80, "Instances", obstacle_type);
+        array_delete(available_lanes, pick_index, 1);
     }
 
-    var spawn_x = lanes[lane_index];
-
-    var obstacle_type = choose(oStone, oGoat);
-    instance_create_layer(spawn_x, -80, "Instances", obstacle_type);
-
-    last_obstacle_lane = lane_index;
     spawn_timer = spawn_interval;
 }
 
@@ -34,10 +44,8 @@ coin_timer--;
 if (coin_timer <= 0) {
     var lane_index = irandom(2);
 
-    var lane_attempts = 0;
-    while ((lane_index == last_obstacle_lane || lane_index == last_coin_lane) && lane_attempts < 3) {
+    if (lane_index == last_coin_lane) {
         lane_index = (lane_index + 1) mod 3;
-        lane_attempts++;
     }
 
     var spawn_x = lanes[lane_index];

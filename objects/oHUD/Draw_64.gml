@@ -12,14 +12,18 @@ if (instance_exists(player)) {
 }
 
 if (instance_exists(game)) {
-    draw_text(32, 112, "Distance: " + string(floor(game.distance)));
-    draw_text(32, 152, "Delivery: " + string(floor(clamp(game.distance / game.finish_distance, 0, 1) * 100)) + "%");
+    var progress = clamp(game.distance / game.finish_distance, 0, 1);
+    var percent = floor(progress * 100);
+
+    draw_text(32, 112, "Delivery: " + string(percent) + "%");
 
     if (game.game_state == "complete") {
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
-        draw_text(360, 600, "Delivery Complete!");
-        draw_text(360, 650, "Tap or press R to restart");
+
+        draw_text(360, 560, "Delivery Complete!");
+        draw_text(360, 620, "Tap or Press R to Restart");
+
         draw_set_halign(fa_left);
         draw_set_valign(fa_top);
     }
@@ -27,8 +31,10 @@ if (instance_exists(game)) {
     if (game.game_state == "gameover") {
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
-        draw_text(360, 600, "Game Over");
-        draw_text(360, 650, "Tap or press R to restart");
+
+        draw_text(360, 560, "Game Over");
+        draw_text(360, 620, "Tap or Press R to Restart");
+
         draw_set_halign(fa_left);
         draw_set_valign(fa_top);
     }

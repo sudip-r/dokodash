@@ -9,7 +9,7 @@ player_hp = 3;
 points = 0;
 
 hit_cooldown = 0;
-hit_cooldown_max = 60;
+hit_cooldown_max = 45;
 
 // Touch/swipe tracking
 touch_start_x = 0;
