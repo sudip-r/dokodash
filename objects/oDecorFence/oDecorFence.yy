@@ -1,17 +1,18 @@
 {
   "$GMObject":"",
-  "%Name":"oDokoPickup",
-  "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-  ],
+  "%Name":"oDecorFence",
+  "eventList":[],
   "managed":true,
-  "name":"oDokoPickup",
+  "name":"oDecorFence",
   "overriddenProperties":[],
   "parent":{
     "name":"Objects",
     "path":"folders/Objects.yy",
   },
-  "parentObjectId":null,
+  "parentObjectId":{
+    "name":"oDecorParent",
+    "path":"objects/oDecorParent/oDecorParent.yy",
+  },
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,
@@ -30,8 +31,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"sDokoPickup",
-    "path":"sprites/sDokoPickup/sDokoPickup.yy",
+    "name":"sDecorFence",
+    "path":"sprites/sDecorFence/sDecorFence.yy",
   },
   "spriteMaskId":null,
   "visible":true,

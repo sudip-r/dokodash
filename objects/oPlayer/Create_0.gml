@@ -7,6 +7,7 @@ move_smoothness = 0.25;
 
 player_hp = 3;
 points = 0;
+doko_items = 0;
 
 hit_cooldown = 0;
 hit_cooldown_max = 45;
