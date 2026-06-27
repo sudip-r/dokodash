@@ -1,5 +1,12 @@
 var game = instance_find(oGame, 0);
 
+if (hit_cooldown > 0) {
+    hit_cooldown--;
+    image_alpha = ((hit_cooldown div 5) mod 2 == 0) ? 0.35 : 1;
+} else {
+    image_alpha = 1;
+}
+
 if (instance_exists(game)) {
     if (game.game_state != "playing") {
         exit;

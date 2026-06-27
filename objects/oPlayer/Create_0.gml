@@ -8,6 +8,9 @@ move_smoothness = 0.25;
 player_hp = 3;
 points = 0;
 
+hit_cooldown = 0;
+hit_cooldown_max = 60;
+
 // Touch/swipe tracking
 touch_start_x = 0;
 touch_start_y = 0;
