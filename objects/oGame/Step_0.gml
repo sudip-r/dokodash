@@ -17,12 +17,14 @@ if (game_state != "playing") {
 // Route progress
 distance += game_speed;
 
-// Spawn obstacles
 spawn_timer--;
 
 if (spawn_timer <= 0) {
-    var obstacle_count = choose(1, 1, 2);
+    // Start with all lanes available
     var available_lanes = [0, 1, 2];
+
+    // Spawn 1 or 2 obstacles, never 3
+    var obstacle_count = choose(1, 1, 2);
 
     repeat (obstacle_count) {
         var pick_index = irandom(array_length(available_lanes) - 1);
@@ -32,28 +34,25 @@ if (spawn_timer <= 0) {
         var obstacle_type = choose(oStone, oGoat);
 
         instance_create_layer(spawn_x, -80, "Instances", obstacle_type);
+
+        // Remove this lane from available lanes,
+        // so coins cannot spawn on top of this obstacle.
         array_delete(available_lanes, pick_index, 1);
     }
 
-    spawn_timer = spawn_interval;
-}
+    // Coins can only spawn in remaining safe lanes
+    if (array_length(available_lanes) > 0) {
+        if (random(1) < coin_chance) {
+            var coin_pick_index = irandom(array_length(available_lanes) - 1);
+            var coin_lane_index = available_lanes[coin_pick_index];
 
-// Spawn coins
-coin_timer--;
+            var coin_x = lanes[coin_lane_index];
 
-if (coin_timer <= 0) {
-    var lane_index = irandom(2);
-
-    if (lane_index == last_coin_lane) {
-        lane_index = (lane_index + 1) mod 3;
+            instance_create_layer(coin_x, -80, "Instances", oCoin);
+        }
     }
 
-    var spawn_x = lanes[lane_index];
-
-    instance_create_layer(spawn_x, -80, "Instances", oCoin);
-
-    last_coin_lane = lane_index;
-    coin_timer = coin_interval;
+    spawn_timer = spawn_interval;
 }
 
 // Finish condition
