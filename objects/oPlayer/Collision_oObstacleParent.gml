@@ -21,6 +21,18 @@ if (hit_cooldown <= 0) {
         var game = instance_find(oGame, 0);
 
         if (instance_exists(game)) {
+            if (!game.result_recorded) {
+                game.result_recorded = true;
+
+                var progress = clamp(game.distance / game.finish_distance, 0, 1);
+                game.final_progress_percent = floor(progress * 100);
+
+                game.final_points = points;
+                game.final_doko_items = doko_items;
+                game.final_hp = player_hp;
+                game.star_count = 0;
+            }
+
             game.game_state = "gameover";
         }
     }

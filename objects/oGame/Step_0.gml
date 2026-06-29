@@ -71,6 +71,32 @@ if (spawn_timer <= 0) {
 }
 
 // Finish condition
-if (distance >= finish_distance) {
+if (distance >= finish_distance && !result_recorded) {
+    var player = instance_find(oPlayer, 0);
+
+    result_recorded = true;
     game_state = "complete";
+
+    final_progress_percent = 100;
+
+    if (instance_exists(player)) {
+        final_points = player.points;
+        final_doko_items = player.doko_items;
+        final_hp = player.player_hp;
+
+        star_count = 1;
+
+        if (player.player_hp >= 2) {
+            star_count += 1;
+        }
+
+        if (player.doko_items >= 2) {
+            star_count += 1;
+        }
+    } else {
+        final_points = 0;
+        final_doko_items = 0;
+        final_hp = 0;
+        star_count = 1;
+    }
 }
