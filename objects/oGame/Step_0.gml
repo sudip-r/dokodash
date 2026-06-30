@@ -177,27 +177,28 @@ if (difficulty_stage != previous_stage) {
 spawn_timer--;
 
 if (spawn_timer <= 0) {
-    // Start with all lanes available
-    var available_lanes = [0, 1, 2];
+    var available_slots = [];
+
+    for (var i = 0; i < array_length(spawn_slots); i++) {
+        array_push(available_slots, i);
+    }
 
     // Optional enemy warning spawn
     if (instance_number(oThugChaser) < max_active_chasers && instance_number(oEnemyWarning) <= 0) {
         if (random(1) < enemy_warning_chance) {
-            var enemy_pick_index = irandom(array_length(available_lanes) - 1);
-            var enemy_lane_index = available_lanes[enemy_pick_index];
-            var enemy_x = lanes[enemy_lane_index];
+            var enemy_pick_index = irandom(array_length(available_slots) - 1);
+            var enemy_slot_index = available_slots[enemy_pick_index];
+            var enemy_x = spawn_slots[enemy_slot_index];
 
             var warning = instance_create_layer(enemy_x, -80, "Instances", oEnemyWarning);
-            warning.lane = enemy_lane_index;
             warning.x = enemy_x;
+            warning.warning_x = enemy_x;
 
-            array_delete(available_lanes, enemy_pick_index, 1);
+            array_delete(available_slots, enemy_pick_index, 1);
         }
     }
 
-    var safe_lane_reserve = 1;
-    var possible_obstacles = max(0, array_length(available_lanes) - safe_lane_reserve);
-
+    var possible_obstacles = max(0, array_length(available_slots) - safe_slot_reserve);
     var obstacle_limit = min(max_obstacles_per_row, possible_obstacles);
     var obstacle_count = 0;
 
@@ -207,10 +208,10 @@ if (spawn_timer <= 0) {
     }
 
     repeat (obstacle_count) {
-        var pick_index = irandom(array_length(available_lanes) - 1);
-        var lane_index = available_lanes[pick_index];
+        var pick_index = irandom(array_length(available_slots) - 1);
+        var slot_index = available_slots[pick_index];
 
-        var spawn_x = lanes[lane_index];
+        var spawn_x = spawn_slots[slot_index];
         var obstacle_roll = random(1);
         var obstacle_type;
 
@@ -222,25 +223,25 @@ if (spawn_timer <= 0) {
 
         instance_create_layer(spawn_x, -80, "Instances", obstacle_type);
 
-        array_delete(available_lanes, pick_index, 1);
+        array_delete(available_slots, pick_index, 1);
     }
 
-    // Spawn either a special doko pickup or a coin in remaining safe lanes.
-    if (array_length(available_lanes) > 0) {
+    // Spawn either a special doko pickup or a coin in a remaining open slot.
+    if (array_length(available_slots) > 0) {
         var collectible_roll = random(1);
 
         if (collectible_roll < doko_pickup_chance) {
-            var doko_pick_index = irandom(array_length(available_lanes) - 1);
-            var doko_lane_index = available_lanes[doko_pick_index];
-            var doko_x = lanes[doko_lane_index];
+            var doko_pick_index = irandom(array_length(available_slots) - 1);
+            var doko_slot_index = available_slots[doko_pick_index];
+            var doko_x = spawn_slots[doko_slot_index];
 
             instance_create_layer(doko_x, -80, "Instances", oDokoPickup);
 
-            array_delete(available_lanes, doko_pick_index, 1);
+            array_delete(available_slots, doko_pick_index, 1);
         } else if (collectible_roll < doko_pickup_chance + coin_chance) {
-            var coin_pick_index = irandom(array_length(available_lanes) - 1);
-            var coin_lane_index = available_lanes[coin_pick_index];
-            var coin_x = lanes[coin_lane_index];
+            var coin_pick_index = irandom(array_length(available_slots) - 1);
+            var coin_slot_index = available_slots[coin_pick_index];
+            var coin_x = spawn_slots[coin_slot_index];
 
             instance_create_layer(coin_x, -80, "Instances", oCoin);
         }

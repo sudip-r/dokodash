@@ -123,7 +123,7 @@ if (game.game_state == "playing") {
         draw_set_color(c_white);
     }
 
-    draw_text(32, 352, "Shift = Dash | F = Flash");
+    draw_text(32, 352, "A/D or Left/Right Move | Shift Dash | F Flash");
 
     draw_set_color(c_white);
     draw_rectangle(

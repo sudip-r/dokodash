@@ -45,6 +45,18 @@ spawn_timer = 60;
 
 lanes = [180, 360, 540];
 
+// Free movement path boundaries
+path_left = 140;
+path_right = 580;
+path_center = (path_left + path_right) * 0.5;
+
+// Invisible spawn slots used only for fair spawning.
+// Player movement is NOT locked to these.
+spawn_slots = [170, 240, 310, 390, 470, 550];
+
+// Minimum number of spawn slots that should remain unused in a row.
+safe_slot_reserve = 2;
+
 max_active_chasers = 1;
 
 mission_name = "Night Food Run";

@@ -14,10 +14,8 @@ warning_timer--;
 blink_timer++;
 
 if (warning_timer <= 0) {
-    var enemy = instance_create_layer(lane_x[lane], y, "Instances", target_enemy);
-    enemy.lane = lane;
-    enemy.target_lane = lane;
-    enemy.x = lane_x[lane];
+    var enemy = instance_create_layer(warning_x, y, "Instances", target_enemy);
+    enemy.x = warning_x;
 
     instance_destroy();
 }

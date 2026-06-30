@@ -13,18 +13,13 @@ y += game.game_speed;
 var player = instance_find(oPlayer, 0);
 
 if (instance_exists(player)) {
-    change_lane_timer--;
+    var desired_x = clamp(player.x, game.path_left, game.path_right);
+    var dx = desired_x - x;
 
-    if (change_lane_timer <= 0) {
-        if (player.lane < lane) {
-            lane = max(0, lane - 1);
-        } else if (player.lane > lane) {
-            lane = min(2, lane + 1);
-        }
+    var steer = clamp(dx * steer_strength, -max_steer_speed, max_steer_speed);
+    x += steer;
 
-        target_lane = lane;
-        change_lane_timer = change_lane_interval;
-    }
+    x = clamp(x, game.path_left, game.path_right);
 
     if (abs(player.x - x) < 48 && abs(player.y - y) < 72) {
         with (player) {
@@ -37,13 +32,13 @@ if (instance_exists(player)) {
                 feedback.display_text = "Evaded!";
                 feedback.text_color = c_aqua;
             } else if (hit_cooldown <= 0) {
-                var game = instance_find(oGame, 0);
+                var player_game = instance_find(oGame, 0);
 
                 player_hp -= other.enemy_damage;
                 hit_cooldown = hit_cooldown_max;
 
-                if (instance_exists(game)) {
-                    game.damage_flash_timer = game.damage_flash_duration;
+                if (instance_exists(player_game)) {
+                    player_game.damage_flash_timer = player_game.damage_flash_duration;
                 }
 
                 var feedback = instance_create_layer(x, y - 48, "Instances", oFloatingText);
@@ -53,20 +48,20 @@ if (instance_exists(player)) {
                 feedback.life_max = feedback.life;
 
                 if (player_hp <= 0) {
-                    if (instance_exists(game)) {
-                        if (!game.result_recorded) {
-                            game.result_recorded = true;
+                    if (instance_exists(player_game)) {
+                        if (!player_game.result_recorded) {
+                            player_game.result_recorded = true;
 
-                            var progress = clamp(game.distance / game.finish_distance, 0, 1);
-                            game.final_progress_percent = floor(progress * 100);
+                            var progress = clamp(player_game.distance / player_game.finish_distance, 0, 1);
+                            player_game.final_progress_percent = floor(progress * 100);
 
-                            game.final_points = points;
-                            game.final_doko_items = doko_items;
-                            game.final_hp = player_hp;
-                            game.star_count = 0;
+                            player_game.final_points = points;
+                            player_game.final_doko_items = doko_items;
+                            player_game.final_hp = player_hp;
+                            player_game.star_count = 0;
                         }
 
-                        game.game_state = "gameover";
+                        player_game.game_state = "gameover";
                     }
                 }
             }
@@ -76,8 +71,6 @@ if (instance_exists(player)) {
         exit;
     }
 }
-
-x = lerp(x, lane_x[target_lane], move_smoothness);
 
 if (y > room_height + 120) {
     instance_destroy();
