@@ -41,7 +41,9 @@ if (hit_cooldown <= 0) {
                 game.final_progress_percent = floor(progress * 100);
 
                 game.final_points = points;
-                game.final_doko_items = doko_items;
+                game.final_food_carried = food_carried;
+                game.villagers_fed = 0;
+                game.final_doko_items = food_carried;
                 game.final_hp = player_hp;
                 game.star_count = 0;
             }

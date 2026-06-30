@@ -10,6 +10,7 @@ story_lines = [
     "The villagers are trapped and hungry.",
     "Aarav has a hidden farm near the forest river.",
     "Every night, he carries food back in secret.",
+    "The more he carries, the harder it is to escape.",
     "He cannot fight.",
     "He must run."
 ];

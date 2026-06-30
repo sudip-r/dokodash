@@ -37,6 +37,22 @@ if (flash_evade_timer > 0) {
     flash_evade_timer--;
 }
 
+food_weight_level = food_carried;
+doko_items = food_carried;
+
+var food_move_penalty = min(food_carried * food_move_penalty_per_item, food_move_penalty_max);
+var current_keyboard_move_speed = max(4, base_keyboard_move_speed - food_move_penalty);
+var current_drag_smoothness = max(0.12, base_drag_move_smoothness - (food_carried * 0.01));
+
+var extra_dash_cooldown = 0;
+
+if (food_carried >= food_dash_penalty_threshold) {
+    extra_dash_cooldown = min(
+        (food_carried - food_dash_penalty_threshold + 1) * food_dash_cooldown_penalty_step,
+        food_dash_cooldown_penalty_max
+    );
+}
+
 var tap_pressed = device_mouse_check_button_pressed(0, mb_left);
 var tap_down = device_mouse_check_button(0, mb_left);
 var tap_released = device_mouse_check_button_released(0, mb_left);
@@ -125,7 +141,7 @@ if (dash_pressed && !flash_pressed && dash_cooldown <= 0 && !dash_active) {
 
         dash_active = true;
         dash_timer = dash_duration;
-        dash_cooldown = dash_cooldown_max;
+        dash_cooldown = dash_cooldown_max + extra_dash_cooldown;
         dash_enemy_evade_timer = dash_enemy_evade_duration;
 
         var feedback = instance_create_layer(x, y - 56, "Instances", oFloatingText);
@@ -151,9 +167,44 @@ if (keyboard_check(vk_right) || keyboard_check(ord("D"))) {
 }
 
 if (input_x != 0) {
-    x += input_x * keyboard_move_speed;
+    x += input_x * current_keyboard_move_speed;
     last_move_direction = sign(input_x);
     target_x = x;
+}
+
+var tried_left_border = false;
+var tried_right_border = false;
+
+if (x <= path_left + 2 && input_x < 0) {
+    tried_left_border = true;
+}
+
+if (x >= path_right - 2 && input_x > 0) {
+    tried_right_border = true;
+}
+
+if (tap_down && movement_touch_active) {
+    if (x <= path_left + 2 && gui_x < path_left) {
+        tried_left_border = true;
+    }
+
+    if (x >= path_right - 2 && gui_x > path_right) {
+        tried_right_border = true;
+    }
+}
+
+if (border_feedback_timer > 0) {
+    border_feedback_timer--;
+}
+
+if ((tried_left_border || tried_right_border) && border_feedback_timer <= 0) {
+    var border_feedback = instance_create_layer(x, y - 48, "Instances", oFloatingText);
+    border_feedback.display_text = "Dense Forest";
+    border_feedback.text_color = c_gray;
+    border_feedback.life = 35;
+    border_feedback.life_max = border_feedback.life;
+
+    border_feedback_timer = border_feedback_cooldown;
 }
 
 if (tap_pressed && !touching_dash_button && !touching_flash_button) {
@@ -177,7 +228,7 @@ if (tap_released) {
 }
 
 if (movement_touch_active) {
-    x = lerp(x, target_x, drag_move_smoothness);
+    x = lerp(x, target_x, current_drag_smoothness);
 }
 
 x = clamp(x, path_left, path_right);

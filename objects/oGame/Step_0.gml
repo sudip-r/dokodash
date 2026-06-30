@@ -4,6 +4,10 @@ var gui_y = device_mouse_y_to_gui(0);
 
 var pause_pressed = keyboard_check_pressed(ord("P")) || keyboard_check_pressed(vk_escape);
 
+if (keyboard_check_pressed(vk_f3)) {
+    game_debug_mode = !game_debug_mode;
+}
+
 if (game_state == "playing") {
     var tapped_pause_button =
         tap_pressed &&
@@ -261,21 +265,25 @@ if (distance >= finish_distance && !result_recorded) {
 
     if (instance_exists(player)) {
         final_points = player.points;
-        final_doko_items = player.doko_items;
+        final_food_carried = player.food_carried;
+        villagers_fed = final_food_carried;
+        final_doko_items = player.food_carried;
         final_hp = player.player_hp;
 
         star_count = 1;
 
-        if (player.player_hp >= 2) {
+        if (player.food_carried >= 3) {
             star_count += 1;
         }
 
-        if (player.doko_items >= 2) {
+        if (player.player_hp >= 2) {
             star_count += 1;
         }
     } else {
         final_points = 0;
         final_doko_items = 0;
+        final_food_carried = 0;
+        villagers_fed = 0;
         final_hp = 0;
         star_count = 1;
     }

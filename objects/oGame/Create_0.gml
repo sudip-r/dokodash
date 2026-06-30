@@ -50,21 +50,35 @@ path_left = 140;
 path_right = 580;
 path_center = (path_left + path_right) * 0.5;
 
+// Debug
+game_debug_mode = false;
+
 // Invisible spawn slots used only for fair spawning.
 // Player movement is NOT locked to these.
 spawn_slots = [170, 240, 310, 390, 470, 550];
 
 // Minimum number of spawn slots that should remain unused in a row.
 safe_slot_reserve = 2;
+minimum_open_gap = 120;
+
+// Chaser tuning
+chaser_steer_strength = 0.025;
+chaser_max_steer_speed = 3;
+
+// Skill tuning
+recommended_dash_distance = 110;
+recommended_flash_distance = 260;
 
 max_active_chasers = 1;
 
 mission_name = "Night Food Run";
-mission_goal_text = "Bring food from the hidden farm without getting caught";
+mission_goal_text = "Carry food back to the village without getting caught";
 
 star_count = 0;
 final_points = 0;
 final_doko_items = 0;
+final_food_carried = 0;
+villagers_fed = 0;
 final_hp = 0;
 final_progress_percent = 0;
 

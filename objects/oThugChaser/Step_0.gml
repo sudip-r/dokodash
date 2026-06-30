@@ -8,6 +8,9 @@ if (game.game_state != "playing") {
     exit;
 }
 
+steer_strength = game.chaser_steer_strength;
+max_steer_speed = game.chaser_max_steer_speed;
+
 y += game.game_speed;
 
 var player = instance_find(oPlayer, 0);
@@ -56,7 +59,9 @@ if (instance_exists(player)) {
                             player_game.final_progress_percent = floor(progress * 100);
 
                             player_game.final_points = points;
-                            player_game.final_doko_items = doko_items;
+                            player_game.final_food_carried = food_carried;
+                            player_game.villagers_fed = 0;
+                            player_game.final_doko_items = food_carried;
                             player_game.final_hp = player_hp;
                             player_game.star_count = 0;
                         }
