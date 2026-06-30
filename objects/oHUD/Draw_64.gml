@@ -231,3 +231,16 @@ if (game.game_state == "gameover") {
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
 }
+
+if (instance_exists(game)) {
+    if (game.damage_flash_timer > 0) {
+        var flash_alpha = (game.damage_flash_timer / game.damage_flash_duration) * game.damage_flash_alpha_max;
+
+        draw_set_alpha(flash_alpha);
+        draw_set_color(c_red);
+        draw_rectangle(0, 0, 720, 1280, false);
+
+        draw_set_alpha(1);
+        draw_set_color(c_white);
+    }
+}

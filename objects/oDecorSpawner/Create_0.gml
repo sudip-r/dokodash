@@ -1,10 +1,16 @@
-decor_timer = 20;
-decor_interval = 35;
+decor_timer = 30;
+decor_interval = 75;
 
-left_x_min = 40;
-left_x_max = 95;
+road_left = 120;
+road_right = 600;
+road_margin = 20;
 
-right_x_min = 625;
-right_x_max = 680;
+decor_y = -140;
 
-decor_y = -120;
+next_side = choose("left", "right");
+
+// Prevent too much clutter
+max_active_decor = 10;
+
+// Large decorations should be rare
+large_decor_chance = 0.18;

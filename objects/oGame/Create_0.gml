@@ -26,6 +26,14 @@ max_obstacles_per_row = 1;
 // Final stretch flag
 final_stretch_started = false;
 
+// Screen feedback
+damage_flash_timer = 0;
+damage_flash_duration = 14;
+damage_flash_alpha_max = 0.35;
+
+// Optional feedback cooldown to avoid spam
+feedback_lock_timer = 0;
+
 slow_timer = 0;
 slow_duration = 45;
 slow_game_speed = 3;

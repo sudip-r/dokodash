@@ -23,12 +23,22 @@ if (other.object_index == oPuddle) {
 }
 
 if (hit_cooldown <= 0) {
+    var game = instance_find(oGame, 0);
+
     player_hp -= other.damage;
     hit_cooldown = hit_cooldown_max;
 
-    if (player_hp <= 0) {
-        var game = instance_find(oGame, 0);
+    if (instance_exists(game)) {
+        game.damage_flash_timer = game.damage_flash_duration;
+    }
 
+    var feedback = instance_create_layer(x, y - 48, "Instances", oFloatingText);
+    feedback.display_text = "Hit!";
+    feedback.text_color = c_red;
+    feedback.life = 40;
+    feedback.life_max = feedback.life;
+
+    if (player_hp <= 0) {
         if (instance_exists(game)) {
             if (!game.result_recorded) {
                 game.result_recorded = true;

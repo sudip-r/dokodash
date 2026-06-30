@@ -62,6 +62,14 @@ if (game_state == "paused") {
     exit;
 }
 
+if (damage_flash_timer > 0) {
+    damage_flash_timer--;
+}
+
+if (feedback_lock_timer > 0) {
+    feedback_lock_timer--;
+}
+
 if (game_state == "gameover" || game_state == "complete") {
     if (keyboard_check_pressed(ord("R"))) {
         room_restart();
@@ -154,6 +162,7 @@ else {
         feedback.display_text = "Final Stretch!";
         feedback.text_color = c_red;
         feedback.life = 90;
+        feedback.life_max = feedback.life;
     }
 }
 
@@ -162,6 +171,7 @@ if (difficulty_stage != previous_stage) {
     feedback.display_text = difficulty_name;
     feedback.text_color = c_yellow;
     feedback.life = 90;
+    feedback.life_max = feedback.life;
 }
 
 spawn_timer--;

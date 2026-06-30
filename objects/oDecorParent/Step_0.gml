@@ -6,6 +6,6 @@ if (instance_exists(game)) {
     }
 }
 
-if (y > room_height + 200) {
+if (y > room_height + 220) {
     instance_destroy();
 }
