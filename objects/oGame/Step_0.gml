@@ -90,6 +90,12 @@ if (game_state != "playing") {
     exit;
 }
 
+if (mission_intro_timer > 0) {
+    mission_intro_timer--;
+} else {
+    mission_intro_shown = true;
+}
+
 if (slow_timer > 0) {
     slow_timer--;
     game_speed = slow_game_speed;
@@ -266,17 +272,17 @@ if (distance >= finish_distance && !result_recorded) {
     if (instance_exists(player)) {
         final_points = player.points;
         final_food_carried = player.food_carried;
-        villagers_fed = final_food_carried;
+        villagers_fed = player.food_carried;
         final_doko_items = player.food_carried;
         final_hp = player.player_hp;
 
         star_count = 1;
 
-        if (player.food_carried >= 3) {
+        if (player.food_carried >= mission_food_goal) {
             star_count += 1;
         }
 
-        if (player.player_hp >= 2) {
+        if (player.player_hp >= mission_hp_goal) {
             star_count += 1;
         }
     } else {
@@ -285,6 +291,6 @@ if (distance >= finish_distance && !result_recorded) {
         final_food_carried = 0;
         villagers_fed = 0;
         final_hp = 0;
-        star_count = 1;
+        star_count = 0;
     }
 }

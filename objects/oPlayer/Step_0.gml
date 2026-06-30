@@ -63,10 +63,17 @@ var gui_y = device_mouse_y_to_gui(0);
 var dash_pressed = keyboard_check_pressed(vk_shift);
 var flash_pressed = keyboard_check_pressed(ord("F"));
 
+var touching_pause_button = false;
 var touching_dash_button = false;
 var touching_flash_button = false;
 
 if (instance_exists(game)) {
+    touching_pause_button =
+        gui_x >= game.pause_button_x &&
+        gui_x <= game.pause_button_x + game.pause_button_w &&
+        gui_y >= game.pause_button_y &&
+        gui_y <= game.pause_button_y + game.pause_button_h;
+
     touching_dash_button =
         gui_x >= game.dash_button_x &&
         gui_x <= game.dash_button_x + game.dash_button_w &&
@@ -207,7 +214,7 @@ if ((tried_left_border || tried_right_border) && border_feedback_timer <= 0) {
     border_feedback_timer = border_feedback_cooldown;
 }
 
-if (tap_pressed && !touching_dash_button && !touching_flash_button) {
+if (tap_pressed && !touching_dash_button && !touching_flash_button && !touching_pause_button) {
     movement_touch_active = true;
     target_x = clamp(gui_x, path_left, path_right);
 }

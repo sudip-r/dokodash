@@ -71,8 +71,21 @@ recommended_flash_distance = 260;
 
 max_active_chasers = 1;
 
+mission_id = 1;
+mission_title = "Night 1: First Food Run";
 mission_name = "Night Food Run";
 mission_goal_text = "Carry food back to the village without getting caught";
+
+mission_main_goal = "Reach the village";
+mission_food_goal = 3;
+mission_hp_goal = 2;
+
+mission_intro_shown = false;
+mission_intro_timer = 180;
+mission_intro_timer_max = 180;
+
+mission_complete_title = "Food Delivered";
+mission_failed_title = "Delivery Failed";
 
 star_count = 0;
 final_points = 0;

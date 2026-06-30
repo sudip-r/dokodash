@@ -14,19 +14,18 @@ var progress = clamp(game.distance / game.finish_distance, 0, 1);
 var percent = floor(progress * 100);
 
 if (game.game_state == "playing") {
-    draw_text(32, 32, game.mission_name);
-    draw_text(32, 62, game.mission_goal_text);
+    draw_text(32, 32, game.mission_title);
 
     if (instance_exists(player)) {
-        draw_text(32, 112, "HP: " + string(player.player_hp));
-        draw_text(32, 152, "Points: " + string(player.points));
-        draw_text(32, 192, "Food: " + string(player.food_carried));
+        draw_text(32, 80, "HP: " + string(player.player_hp));
+        draw_text(32, 120, "Food: " + string(player.food_carried));
+        draw_text(32, 160, "Points: " + string(player.points));
     }
 
-    draw_text(32, 232, "Delivery: " + string(percent) + "%");
-    draw_text(32, 272, "Route: " + game.difficulty_name);
+    draw_text(32, 200, "Delivery: " + string(percent) + "%");
+    draw_text(32, 240, "Route: " + game.difficulty_name);
 
-    var status_y = 312;
+    var status_y = 280;
 
     if (instance_exists(player) && player.food_carried >= 4) {
         draw_text(32, status_y, "Load: Heavy");
@@ -153,53 +152,6 @@ if (game.game_state == "playing") {
     draw_set_valign(fa_top);
 }
 
-if (game.game_state == "paused") {
-    draw_set_alpha(0.65);
-    draw_set_color(c_black);
-    draw_rectangle(0, 0, 720, 1280, false);
-    draw_set_alpha(1);
-
-    draw_set_halign(fa_center);
-    draw_set_valign(fa_middle);
-
-    draw_set_color(c_white);
-    draw_text(360, 380, "Paused");
-
-    // Resume button
-    draw_rectangle(
-        game.resume_button_x1,
-        game.resume_button_y1,
-        game.resume_button_x2,
-        game.resume_button_y2,
-        true
-    );
-    draw_text(360, 540, "Resume");
-
-    // Restart button
-    draw_rectangle(
-        game.restart_button_x1,
-        game.restart_button_y1,
-        game.restart_button_x2,
-        game.restart_button_y2,
-        true
-    );
-    draw_text(360, 660, "Restart Mission");
-
-    // Title button
-    draw_rectangle(
-        game.title_button_x1,
-        game.title_button_y1,
-        game.title_button_x2,
-        game.title_button_y2,
-        true
-    );
-    draw_text(360, 780, "Return to Title");
-
-    draw_set_halign(fa_left);
-    draw_set_valign(fa_top);
-    draw_set_color(c_white);
-}
-
 if (game.game_state == "complete") {
     draw_set_halign(fa_center);
     draw_set_valign(fa_middle);
@@ -207,15 +159,16 @@ if (game.game_state == "complete") {
     var stars_text = "";
 
     repeat (game.star_count) {
-        stars_text += "*";
+        stars_text += "★";
     }
 
     repeat (3 - game.star_count) {
-        stars_text += "-";
+        stars_text += "☆";
     }
 
-    draw_text(360, 420, "Delivery Complete!");
-    draw_text(360, 490, "Stars: " + stars_text);
+    draw_text(360, 360, game.mission_title);
+    draw_text(360, 430, game.mission_complete_title);
+    draw_text(360, 500, stars_text);
     draw_text(360, 560, "Food Delivered: " + string(game.final_food_carried));
     draw_text(360, 620, "Villagers Fed: " + string(game.villagers_fed));
     draw_text(360, 680, "HP Remaining: " + string(game.final_hp));
@@ -229,8 +182,8 @@ if (game.game_state == "gameover") {
     draw_set_halign(fa_center);
     draw_set_valign(fa_middle);
 
-    draw_text(360, 460, "Game Over");
-    draw_text(360, 530, "Delivery Failed");
+    draw_text(360, 400, game.mission_title);
+    draw_text(360, 470, game.mission_failed_title);
     draw_text(360, 600, "Food Lost: " + string(game.final_food_carried));
     draw_text(360, 660, "Progress: " + string(game.final_progress_percent) + "%");
     draw_text(360, 720, "Points: " + string(game.final_points));
@@ -238,6 +191,27 @@ if (game.game_state == "gameover") {
 
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
+}
+
+if (game.game_state == "playing" && !game.mission_intro_shown) {
+    draw_set_alpha(0.70);
+    draw_set_color(c_black);
+    draw_rectangle(60, 340, 660, 760, false);
+    draw_set_alpha(1);
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_color(c_white);
+
+    draw_text(360, 410, game.mission_title);
+    draw_text(360, 490, "Goal: " + game.mission_main_goal);
+    draw_text(360, 550, "Bonus: Deliver " + string(game.mission_food_goal) + " food");
+    draw_text(360, 610, "Survive: Finish with " + string(game.mission_hp_goal) + " HP");
+    draw_text(360, 700, "Run!");
+
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+    draw_set_color(c_white);
 }
 
 if (instance_exists(game) && game.game_debug_mode) {
@@ -304,14 +278,14 @@ if (instance_exists(game) && game.game_debug_mode) {
     draw_set_valign(fa_top);
 
     draw_text(32, 1040, "DEBUG");
-    draw_text(32, 1070, "Difficulty: " + string(game.difficulty_stage) + " - " + game.difficulty_name);
-    draw_text(32, 1100, "Chasers: " + string(instance_number(oThugChaser)));
-    draw_text(32, 1130, "Warnings: " + string(instance_number(oEnemyWarning)));
-    draw_text(32, 1160, "Spawn Interval: " + string(game.spawn_interval));
+    draw_text(32, 1070, "Mission: " + game.mission_title);
+    draw_text(32, 1100, "Difficulty: " + string(game.difficulty_stage) + " - " + game.difficulty_name);
+    draw_text(32, 1130, "Chasers: " + string(instance_number(oThugChaser)));
+    draw_text(32, 1160, "Warnings: " + string(instance_number(oEnemyWarning)));
+    draw_text(32, 1190, "Spawn Interval: " + string(game.spawn_interval));
 
     if (instance_exists(player)) {
-        draw_text(32, 1190, "Dash CD: " + string(player.dash_cooldown));
-        draw_text(32, 1220, "Flash CD: " + string(player.flash_cooldown));
+        draw_text(32, 1220, "Dash CD: " + string(player.dash_cooldown) + " | Flash CD: " + string(player.flash_cooldown));
         draw_text(32, 1250, "Food: " + string(player.food_carried));
     }
 
@@ -329,4 +303,51 @@ if (instance_exists(game)) {
         draw_set_alpha(1);
         draw_set_color(c_white);
     }
+}
+
+if (game.game_state == "paused") {
+    draw_set_alpha(0.65);
+    draw_set_color(c_black);
+    draw_rectangle(0, 0, 720, 1280, false);
+    draw_set_alpha(1);
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+
+    draw_set_color(c_white);
+    draw_text(360, 380, "Paused");
+
+    // Resume button
+    draw_rectangle(
+        game.resume_button_x1,
+        game.resume_button_y1,
+        game.resume_button_x2,
+        game.resume_button_y2,
+        true
+    );
+    draw_text(360, 540, "Resume");
+
+    // Restart button
+    draw_rectangle(
+        game.restart_button_x1,
+        game.restart_button_y1,
+        game.restart_button_x2,
+        game.restart_button_y2,
+        true
+    );
+    draw_text(360, 660, "Restart Run");
+
+    // Title button
+    draw_rectangle(
+        game.title_button_x1,
+        game.title_button_y1,
+        game.title_button_x2,
+        game.title_button_y2,
+        true
+    );
+    draw_text(360, 780, "Return to Title");
+
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+    draw_set_color(c_white);
 }
