@@ -6,8 +6,8 @@ if (instance_exists(game)) {
     }
 }
 
-y -= rise_speed;
 life--;
+alpha = max(0, life / 26 * 0.65);
 
 if (life <= 0) {
     instance_destroy();

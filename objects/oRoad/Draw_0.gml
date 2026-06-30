@@ -32,3 +32,10 @@ for (var mark_y = -96 + scroll_y; mark_y < room_height + 96; mark_y += 96) {
 draw_set_color(make_color_rgb(100, 75, 45));
 draw_rectangle(road_x, 0, road_x + 8, room_height, false);
 draw_rectangle(road_x + road_w - 8, 0, road_x + road_w, room_height, false);
+
+// Night tint
+draw_set_alpha(0.22);
+draw_set_color(c_black);
+draw_rectangle(0, 0, room_width, room_height, false);
+draw_set_alpha(1);
+draw_set_color(c_white);

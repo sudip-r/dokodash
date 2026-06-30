@@ -1,21 +1,15 @@
 if (flash_evade_timer > 0) {
     var feedback = instance_create_layer(x, y - 48, "Instances", oFloatingText);
-    feedback.display_text = "Phased!";
+    feedback.display_text = "Vanished!";
     feedback.text_color = c_fuchsia;
 
     instance_destroy(other);
     exit;
 }
 
-if (other.object_index == oPuddle) {
-    var game = instance_find(oGame, 0);
-
-    if (instance_exists(game)) {
-        game.slow_timer = game.slow_duration;
-    }
-
+if (dash_enemy_evade_timer > 0) {
     var feedback = instance_create_layer(x, y - 48, "Instances", oFloatingText);
-    feedback.display_text = "Slowed!";
+    feedback.display_text = "Evaded!";
     feedback.text_color = c_aqua;
 
     instance_destroy(other);
@@ -23,8 +17,12 @@ if (other.object_index == oPuddle) {
 }
 
 if (hit_cooldown <= 0) {
-    player_hp -= other.damage;
+    player_hp -= other.enemy_damage;
     hit_cooldown = hit_cooldown_max;
+
+    var feedback = instance_create_layer(x, y - 48, "Instances", oFloatingText);
+    feedback.display_text = "Caught!";
+    feedback.text_color = c_red;
 
     if (player_hp <= 0) {
         var game = instance_find(oGame, 0);
